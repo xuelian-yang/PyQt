@@ -23,18 +23,22 @@ class Worker(QThread):
 
     def run(self):
         print('thread id', QThread.currentThread())
+
         for i in range(1, 101):
             if self.isInterruptionRequested():
                 break
+
             print('value', i)
             self.valueChanged.emit(i)
-            QThread.sleep(1)
+            # QThread.sleep(1)  # 秒
+            QThread.msleep(50)  # 毫秒
 
 
 class Window(QWidget):
 
     def __init__(self, *args, **kwargs):
         super(Window, self).__init__(*args, **kwargs)
+
         layout = QVBoxLayout(self)
         self.progressBar = QProgressBar(self)
         self.progressBar.setRange(0, 100)
@@ -61,6 +65,7 @@ class Window(QWidget):
             self._thread.wait()
             # 强制
             # self._thread.terminate()
+
         self._thread.deleteLater()
         super(Window, self).closeEvent(event)
 
